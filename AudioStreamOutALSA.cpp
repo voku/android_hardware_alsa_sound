@@ -74,6 +74,7 @@ ssize_t AudioStreamOutALSA::write(const void *buffer, size_t bytes)
     AutoMutex lock(mLock);
 
     if (!mPowerLock) {
+        setIdleMode(false);
         acquire_wake_lock (PARTIAL_WAKE_LOCK, "AudioOutLock");
         mPowerLock = true;
     }
@@ -181,6 +182,8 @@ status_t AudioStreamOutALSA::standby()
         mHandle->module->standby(mHandle);
     else
         snd_pcm_drain (mHandle->handle);
+
+    setIdleMode(true);
 
     if (mPowerLock) {
         release_wake_lock ("AudioOutLock");

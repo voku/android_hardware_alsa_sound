@@ -63,6 +63,7 @@ ssize_t AudioStreamInALSA::read(void *buffer, ssize_t bytes)
     AutoMutex lock(mLock);
 
     if (!mPowerLock) {
+        setIdleMode(false);
         acquire_wake_lock (PARTIAL_WAKE_LOCK, "AudioInLock");
         mPowerLock = true;
     }
@@ -134,6 +135,8 @@ status_t AudioStreamInALSA::close()
 status_t AudioStreamInALSA::standby()
 {
     AutoMutex lock(mLock);
+
+    setIdleMode(true);
 
     if (mPowerLock) {
         release_wake_lock ("AudioInLock");

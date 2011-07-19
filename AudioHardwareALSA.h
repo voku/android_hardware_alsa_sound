@@ -153,6 +153,7 @@ public:
 
     status_t            open(int mode);
     void                close();
+    void                setIdleMode(bool mode);
 
 protected:
     friend class AudioHardwareALSA;
